@@ -4,6 +4,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.*;
 
 public class ClientMain
 {
@@ -45,13 +46,19 @@ public class ClientMain
                     break;
                 }
             }
+
+            
             System.out.println("Name chosen: " + name);
             oos.writeObject(new CommandFromClient(CommandFromClient.SENDNAME, name));
 
-            Rolodex frame = new Rolodex();
+            
+            Rolodex frame = new Rolodex(tmpClientListener.getNames());
+            System.out.println(frame);
             Thread t = new Thread(new ClientListener(ois,frame));
+            t.start();
+            frame.setVisible(true);
 
-            System.exit(0);
+            //System.exit(0);
 
 
 

@@ -50,24 +50,27 @@ public class Rolodex extends JPanel {
 
     private JPanel buttonPanel = new JPanel(new GridLayout(0, 1)); // 1 column grid
 
-    public Rolodex() {
+    public Rolodex(String names) {
     
 
         Start();
         reloadButtons();
-        
-            
 
-        
+        users.setText(names);
 
-
-        
-
+       
 
     }
 
+    public Rolodex(){
+        Start();
+        reloadButtons();
+
+        
+    }
+
     JTextArea field;
-    ArrayList<String> users = new ArrayList<String>();
+    JTextArea users;
 
     void Start(){
 
@@ -113,7 +116,7 @@ public class Rolodex extends JPanel {
 
 
 
-        JTextArea users = new JTextArea(5, 20);
+        users = new JTextArea(5, 20);
         users.setLineWrap(true);
         users.setBounds(130, labelY+100+20+200, 220, 100); // hardcode the position and size of the text field
         users.setEditable(false);
@@ -142,6 +145,9 @@ public class Rolodex extends JPanel {
         
         add(topPanel, BorderLayout.PAGE_START);
         add(centerPanel, BorderLayout.CENTER);
+
+        setVisible(true);
+        
     }
 
     ActionListener testListener(){
@@ -172,7 +178,9 @@ public class Rolodex extends JPanel {
     }
 
 
-
+    public void setText(String a){
+        contactList.add(new JLabel(a));
+    }
 
     void addButton(){
         String fname = field.getText();
@@ -219,39 +227,7 @@ public class Rolodex extends JPanel {
        
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-
-            Scanner scan = new Scanner(System.in);
-            //System.out.println("Enter IP: ");
-            String ip = "127.0.0.1";
-
-
-            String name = scan.nextLine();
-
-
-
-            JFrame f = new JFrame("GUI");
-
-            f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
-                WindowListener listener = new WindowAdapter() {
-
-                    @Override
-                    public void windowClosing(WindowEvent we) {
-                        
-                            f.setVisible(false);
-                            f.dispose();
-                        
-                    }
-                };
-                f.addWindowListener(listener);
-            
-            Rolodex project2 = new Rolodex();
-            f.add(project2);
-            f.pack();
-            f.setLocationRelativeTo(null);
-            f.setVisible(true);
-        });
+        
     }
 }
 //In this version of the AddNewProject2 class, I changed the layout manager of the centerPanel to a BorderLayout, and then added the scrollPane to the BorderLayout.WEST position of the centerPanel. This will cause the scrollPane and its contents to be locked to the left side of the centerPanel.
