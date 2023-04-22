@@ -4,10 +4,13 @@ import java.awt.GridLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 
-public class Rolodex extends JPanel {
+
+public class Rolodex extends JFrame {
 
 
     JTextField firstNameField = new JTextField();
@@ -20,28 +23,8 @@ public class Rolodex extends JPanel {
     JButton saveChanges;
     JButton deleteContact;
 
-    ActionListener b = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            System.out.println("Button clicked");
-            ContactButton tmp = (ContactButton) e.getSource();
-            firstNameField.setText(tmp.fname);
-            lastNameField.setText(tmp.lname);
-            phoneNumberField.setText(tmp.phone);
-            addressField.setText(tmp.add);
-            
-            saveChanges.setEnabled(true);
-            deleteContact.setEnabled(true);
-            submit.setEnabled(false);
-            clear.setEnabled(false);
-
-            current = tmp;
-        }
-    };
-
+    
     static ArrayList<JLabel> contactList = new ArrayList<JLabel>();
-
-    ContactButton current = null;
 
     JScrollPane scrollPane;
 
@@ -50,23 +33,40 @@ public class Rolodex extends JPanel {
 
     private JPanel buttonPanel = new JPanel(new GridLayout(0, 1)); // 1 column grid
 
-    public Rolodex(String names) {
-    
+    public Rolodex(String names, ObjectOutputStream oos) {
+        super("Rolodex");
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(900, 600);
 
         Start();
         reloadButtons();
 
+        this.oos = oos;
+
+        //System.out.println(names);
         users.setText(names);
 
-       
 
+
+        setVisible(true);
     }
 
-    public Rolodex(){
+    ObjectOutputStream oos;
+
+    public Rolodex(ObjectOutputStream oos) {
+        super("Rolodex");
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(900, 600);
+
+
+        this.oos = oos;
+
         Start();
         reloadButtons();
 
-        
+        setVisible(true);
     }
 
     JTextArea field;
@@ -83,8 +83,8 @@ public class Rolodex extends JPanel {
         JPanel topPanel = new JPanel();
         
         int gap = 2;
-        setBorder(BorderFactory.createEmptyBorder(gap, gap, gap, gap));
-        setLayout(new BorderLayout(gap, gap));
+        //setBorder(BorderFactory.createEmptyBorder(gap, gap, gap, gap));
+        //setLayout(new BorderLayout(gap, gap));
         
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setPreferredSize(new Dimension(850, 500));
@@ -180,13 +180,23 @@ public class Rolodex extends JPanel {
 
     public void setText(String a){
         contactList.add(new JLabel(a));
+        reloadButtons();
+    }
+
+    public void setNames(String names){
+        users.setText(names);
+        revalidate();
     }
 
     void addButton(){
         String fname = field.getText();
-        contactList.add(new JLabel(fname));
-        reloadButtons();
+        try {
+            oos.writeObject(new CommandFromClient(CommandFromClient.MESSAGE, fname));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     void reloadButtons() {
         buttonPanel.removeAll(); // remove all existing buttons from the panel

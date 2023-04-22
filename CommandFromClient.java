@@ -7,7 +7,9 @@ public class CommandFromClient implements Serializable
 
     public static final int MOVE    =0;
     public static final int RESTART =1;
-    public static final int SENDNAME =2;
+    public static final int MESSAGE = 2;
+    public static final int REQUESTNAMES = 3;
+    public static final int NEWNAME = 4;
 
     public CommandFromClient(int command, String data) {
         this.command = command;

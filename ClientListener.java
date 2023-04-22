@@ -1,7 +1,7 @@
 import java.io.ObjectInputStream;
 
 public class ClientListener implements Runnable{
-    private ObjectInputStream ois =null;    
+    private ObjectInputStream ois =null;
     private Rolodex frame = null;
 
     public ClientListener(ObjectInputStream ois, Rolodex frame) {
@@ -16,19 +16,22 @@ public class ClientListener implements Runnable{
             while(true) {
                 CommandFromServer com = (CommandFromServer) (ois.readObject());
 
-                if (com.getCommand() == CommandFromServer.CONNECTED_AS_X) {
-                    frame.setText("Waiting for RED to connect");
+                if(com.getCommand() == CommandFromServer.MESSAGE){
+                    frame.setText(com.getData());
+                    frame.reloadButtons();
                 }
-                if (com.getCommand() == CommandFromServer.CONNECTED_AS_O) {
-                    frame.setText("Blue's Turn");
+                if(com.getCommand() == CommandFromServer.SENDNAMES){
+                    frame.setNames(com.getData());
+                }
 
-                }
+                
+
             }
         }
         catch(Exception e)
         {
-            System.out.println("Error");
-            System.exit(0);
+            System.out.println(e);
+            //System.exit(0);
         }
     }
 }
