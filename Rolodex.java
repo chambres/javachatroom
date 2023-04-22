@@ -32,9 +32,11 @@ public class Rolodex extends JFrame {
     int maxPanelWidth = 450; // set the maximum width of the panel
 
     private JPanel buttonPanel = new JPanel(new GridLayout(0, 1)); // 1 column grid
+    
+    String myname;
 
-    public Rolodex(String names, ObjectOutputStream oos) {
-        super("Rolodex");
+    public Rolodex(String names, ObjectOutputStream oos, String myname) {
+        super("Chat Room | Signed in as " + myname);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 600);
@@ -43,9 +45,11 @@ public class Rolodex extends JFrame {
         reloadButtons();
 
         this.oos = oos;
+        this.myname = myname;
 
         //System.out.println(names);
-        users.setText(names);
+        
+        setNames(names);
 
 
 
@@ -54,23 +58,29 @@ public class Rolodex extends JFrame {
 
     ObjectOutputStream oos;
 
-    public Rolodex(ObjectOutputStream oos) {
-        super("Rolodex");
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(900, 600);
-
-
-        this.oos = oos;
-
-        Start();
-        reloadButtons();
-
-        setVisible(true);
-    }
 
     JTextArea field;
     JTextArea users;
+
+    WindowListener exitListener = new WindowAdapter() {
+
+        @Override
+        public void windowClosing(WindowEvent e) {
+            int confirm = JOptionPane.showOptionDialog(
+                 null, "Are You Sure to Close Application?", 
+                 "Exit Confirmation", JOptionPane.YES_NO_OPTION, 
+                 JOptionPane.QUESTION_MESSAGE, null, null, null);
+            if (confirm == 0) {
+                try {
+                    oos.writeObject(new CommandFromClient(CommandFromClient.LOGOUT,myname));
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+               System.exit(0);
+            }
+        }
+    };
+
 
     void Start(){
 
@@ -146,6 +156,8 @@ public class Rolodex extends JFrame {
         add(topPanel, BorderLayout.PAGE_START);
         add(centerPanel, BorderLayout.CENTER);
 
+        addWindowListener(exitListener);
+
         setVisible(true);
         
     }
@@ -184,12 +196,16 @@ public class Rolodex extends JFrame {
     }
 
     public void setNames(String names){
+        names = names.substring(1, names.length() - 1);
+        names = names.replaceAll(", ", "\n");
         users.setText(names);
         revalidate();
     }
 
+    
+
     void addButton(){
-        String fname = field.getText();
+        String fname = myname +  ": " + field.getText();
         try {
             oos.writeObject(new CommandFromClient(CommandFromClient.MESSAGE, fname));
         } catch (IOException e) {

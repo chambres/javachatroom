@@ -10,6 +10,7 @@ public class CommandFromClient implements Serializable
     public static final int MESSAGE = 2;
     public static final int REQUESTNAMES = 3;
     public static final int NEWNAME = 4;
+    protected static final int LOGOUT = 0;
 
     public CommandFromClient(int command, String data) {
         this.command = command;

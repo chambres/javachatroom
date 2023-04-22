@@ -14,6 +14,10 @@ public class ServerMain
         return names;
     }
 
+    public static void removeName(String name){
+        names.remove(name);
+    }
+
     public static ArrayList<String> names = new ArrayList<String>();
 
     public static void main(String[] args) {
@@ -25,6 +29,7 @@ public class ServerMain
 
 
             while(true){
+                
                 Socket socketToX = socketSocket.accept();
                 ObjectInputStream oisX = new ObjectInputStream(socketToX.getInputStream());
                 ObjectOutputStream oosX = new ObjectOutputStream(socketToX.getOutputStream());
