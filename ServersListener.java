@@ -45,7 +45,7 @@ public class ServersListener implements Runnable{
                 if(com.getCommand() == CommandFromClient.REQUESTNAMES){
                     for (ObjectOutputStream os : outputStreams){
                         try{
-                            os.writeObject(new CommandFromServer(CommandFromServer.SENDNAMES, ServerMain.getnames().toString()));
+                            os.writeObject(new CommandFromServer(CommandFromServer.SENDNAMES, String.join(";", ServerMain.getnames())));
                         }
                         catch(Exception e){
                             System.out.println(e);
@@ -56,9 +56,10 @@ public class ServersListener implements Runnable{
 
                 if(com.getCommand() == CommandFromClient.NEWNAME){
                     ServerMain.addName(com.getData());
+
                     for (ObjectOutputStream os : outputStreams){
                         try{
-                        os.writeObject(new CommandFromServer(CommandFromServer.SENDNAMES, ServerMain.getnames().toString()));
+                            os.writeObject(new CommandFromServer(CommandFromServer.SENDNAMES, ServerMain.getnames().toString()));
                         }
                         catch(Exception e){
                             System.out.println(e);

@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class CommandFromServer implements Serializable
 {
@@ -24,7 +25,6 @@ public class CommandFromServer implements Serializable
         this.command = command;
         this.data = data;
     }
-
     public int getCommand() {
         return command;
     }

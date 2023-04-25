@@ -23,21 +23,24 @@ public class ClientMain
                 Socket socket = new Socket(ip,8002);
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                 ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());   
-                
-                
+
                 oos.writeObject(new CommandFromClient(CommandFromClient.REQUESTNAMES,""));
 
                 String names = "";
+
                 while(true) {
                     CommandFromServer com = (CommandFromServer) (ois.readObject());
                     if(com.getCommand() == CommandFromServer.SENDNAMES){
-                        System.out.println(com.getData());
+                        System.out.println("data gotten " + ";" + com.getData() + ";");
                         names = com.getData();
                         break;
                     }
                 }
 
-                String[] namesAlreadyInUse = names.split(",");
+                String[] namesAlreadyInUse = names.split(";");
+
+                System.out.println("array of strings" + Arrays.toString(namesAlreadyInUse));
+
                 while(true){
                     System.out.print("Enter your name: ");
                     String name = keyboard.nextLine();
